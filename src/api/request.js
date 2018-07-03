@@ -1,8 +1,10 @@
-var Fly = require("./wx")
+import wx from 'wx'
+import Fly from 'flyio'
+
 const request = new Fly()
 
 request.interceptors.request.use((request) => {
-  // wx.showNavigationBarLoading()
+  wx.showNavigationBarLoading()
   return request
 })
 

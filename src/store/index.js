@@ -6,13 +6,11 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    slides: [],
-    news: [],
-    topics: 1,
+    channel:0,
   },
   mutations: {
-    slides (state, data) {
-      state.slides = data
+    CHANGE_CHANNEL: (state, num) => {
+      state.channel = num
     },
     news (state, data) {
       state.news = data
@@ -23,15 +21,16 @@ const store = new Vuex.Store({
   },
   getters: {
     topics: state => state.topics,
+    channel: state => state.channel,
   },
   actions: {
-    async getSlides({ commit }) {
+    changeChannel({ commit }, num) {
+      commit('CHANGE_CHANNEL', num)
+    },
+    getNewsList({ state, commit }, init) {
       
     },
-    async getNewsList({ state, commit }, init) {
-      
-    },
-    async getTopics({ state, commit }, init) {
+    getTopics({ state, commit }, init) {
       
     }
   }

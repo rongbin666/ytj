@@ -1,4 +1,4 @@
-// import request from './request'
+import request from './request'
 
 const prod = require('~/dev.env');
 if(prod == 'production'){
@@ -8,29 +8,14 @@ if(prod == 'production'){
 }
 const appId = "c98d39b205c25a51";
 var api = {
-	// getList: (r) => request.get(proxy+'/search', null, {
-	// 	"app_key": appId
-	// }),
-	getList(callback) {
-		wx.request({
-			url: proxy+"/search",
-            data: {
-                "app_key": appId,
-            },
-			method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-			// header: {}, // 设置请求的 header
-			success: function (res) {
-				// success
-				callback(res.data);
-			},
-			fail: function () {
-				// fail
-			},
-			complete: function () {
-				// complete
-			}
-		})
-	},
+	// 获得商品列表
+	getList: (r) => request.get(proxy+'/top_day', {
+		"app_key": appId
+	}),
+	getCategoty:(r) => request.get(proxy+'/search', {
+		"app_key": appId,
+		...r
+	}),
 }
 
 export default api

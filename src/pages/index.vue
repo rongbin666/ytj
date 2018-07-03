@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'topics',
+      'channel',
     ])
   },  
   data() {
@@ -110,52 +110,43 @@ export default {
       duration: 1000,
       cate_method: {
         list: [{
-            id: '1',
+            id: '0',
             title: '全部'
           }, {
-            id: '2',
+            id: '1',
             title: '女装'
           }, {
-            id: '3',
+            id: '2',
             title: '男装'
           }, {
-            id: '4',
-            title: '鞋子'
-          }, {
-            id: '5',
-            title: '箱包'
-          }, {
-            id: '6',
-            title: '母婴'
-          }, {
-            id: '7',
+            id: '3',
             title: '内衣'
           }, {
-            id: '8',
-            title: '美妆'
-          }, {
-            id: '9',
-            title: '配饰'
-          }, {
-            id: '10',
-            title: '家居'
-          }, {
-            id: '11',
-            title: '文体'
-          }, {
-            id: '12',
+            id: '4',
             title: '数码'
           }, {
-            id: '13',
-            title: '电器'
-          }, {
-            id: '14',
+            id: '5',
             title: '美食'
           }, {
-            id: '15',
+            id: '6',
+            title: '美妆'
+          }, {
+            id: '7',
+            title: '母婴'
+          }, {
+            id: '8',
+            title: '鞋包'
+          }, {
+            id: '9',
+            title: '家居'
+          }, {
+            id: '10',
+            title: '文体'
+          }, {
+            id: '11',
             title: '其他'
           }],
-          selectedId: '1',
+          selectedId: '0',
           scroll: true,
           height: 42,
       },    
@@ -199,8 +190,14 @@ export default {
             text: '找优惠券',
             picture:require('@/assets/img/jkj.png')
           }
-        ]
+        ],
+      nextData:[],
     };
+  },
+  watch:{
+    channel(){
+      this.getCategoty();
+    }
   },
   mounted() {
     this.getList();
@@ -223,23 +220,42 @@ export default {
       });
     },
     getList(){
-      // api.getList().then(res=>{
-      //   console.log(res)
-      // })
-      api.getList((res)=>{
-        res.data.forEach((item=>{
+      api.getList().then(res=>{
+        let listData = this.dealData(res.data)
+        this.couponList =  this.couponList.concat(listData);
+      })
+    },
+    getCategoty(){
+      api.getCategoty({
+        cate_id:this.channel
+      }).then(res=>{
+        this.couponList =  this.dealData(res.data);
+      })
+    },
+    dealData(data){
+      data.forEach((item=>{
           item.new_place = item.goods_price  - item.coupon_amount;
           item.new_place = item.new_place.toFixed(2);
-        }))
-        this.couponList =  this.couponList.concat(res.data);
-      })
+      }))
+      if(data.length > 20){
+        this.nextData = data.slice(20,data.length);
+        data = data.slice(0,20);
+      } else{
+        this.nextData = [];
+      }
+      return data
     },
     clickHandle(msg, ev) {
       console.log("clickHandle:", msg, ev);
     }
   },
   onReachBottom(){
-    this.getList();
+    if(this.nextData.length > 0){
+      let data = this.dealData(this.nextData)
+      this.couponList =this.couponList.concat(data);
+    } else{
+
+    }
   },
   created() {
     // 调用应用实例的方法获取全局数据

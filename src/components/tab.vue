@@ -11,7 +11,7 @@
           v-for="(item,index) in tab.list"
           :key="index"
           v-bind:class="[tab.selectedId == item.id ? 'zan-tab__item--selected' : '','zan-tab__item']"
-          @click="_handleZanTabChange"
+          @click="channgeIndex"
           :data-component-id="componentId"
           :data-item-id="item.id"
           >
@@ -37,7 +37,7 @@
   </div>
 </template>
 <script>
-
+import { mapGetters } from 'vuex'
 export default {
   name: "tab",
   props: {
@@ -49,8 +49,13 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    ...mapGetters([
+      'channel',
+    ])
+  },  
   mounted() {
-    
+     
   },
   methods: {
     _handleZanTabChange(e) {
@@ -65,6 +70,14 @@ export default {
         this.handleZanTabChange(data);
       } else {
         console.warn("页面缺少 handleZanTabChange 回调函数");
+      }
+    },
+    channgeIndex(e){
+      const dataset = e.currentTarget.dataset;
+      const selectedId = dataset.itemId;
+      if(this.tab.selectedId != selectedId){
+        this.tab.selectedId = selectedId;
+        this.$store.dispatch("changeChannel",selectedId);
       }
     },
     extractComponentId(event = {}) {
